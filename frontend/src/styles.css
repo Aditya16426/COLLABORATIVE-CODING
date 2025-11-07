@@ -1,0 +1,204 @@
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background-color: #1e1e1e;
+  color: white;
+}
+
+.mainContainer {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+/* 🧭 Top Toolbar */
+.topToolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: #202225;
+  border-bottom: 2px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 30; /* ABOVE drawer */
+}
+
+.toolbarTitle {
+  font-weight: bold;
+}
+
+.toolbarBtn {
+  background: #007acc;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  margin-left: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.toolbarBtn:hover { background: #005fa3; }
+.toolbarBtn.leave { background: #e81123; }
+.toolbarBtn.leave:hover { background: #c50f1f; }
+
+/* 📋 Drawer */
+.drawer {
+  position: fixed;
+  top: 50px; /* below toolbar */
+  left: 0;
+  bottom: 0;
+  width: 280px;
+  background: #252526;
+  padding: 16px;
+  overflow-y: auto;
+  border-right: 2px solid #444;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+  z-index: 20;
+}
+.drawer:not(.open) { transform: translateX(-100%); }
+
+.userList {
+  list-style: none;
+  padding: 0;
+}
+
+.userList li {
+  background: #333;
+  margin-bottom: 8px;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.ownerButtons {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.actionBtn {
+  background: #007acc;
+  border: none;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.kickBtn {
+  background: #e81123;
+  border: none;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* ✏️ Editor container below toolbar */
+.editorContainer {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* ✅ Toast */
+.toast {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  background: #007acc;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 6px;
+  z-index: 999;
+  animation: fadein 0.2s ease, fadeout 0.3s ease 1.7s;
+}
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeout {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Cursor tag (collaboration labels) */
+.cursorTag {
+  position: absolute;
+  padding: 2px 6px;
+  border-radius: 6px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.85);
+  font-size: 12px;
+  border-left: 2px solid #fff;
+  pointer-events: none;
+}
+.cursorTag.owner {
+  background: rgba(232, 17, 35, 0.85);
+  border-left-color: #e81123;
+}/* 🔹 Custom Name Popup */
+.nameModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.nameModal {
+  background: #1e1e1e;
+  padding: 24px 32px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+  width: 320px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+
+.nameModal h2 {
+  margin-bottom: 10px;
+}
+
+.nameModal p {
+  font-size: 14px;
+  color: #ccc;
+  margin-bottom: 16px;
+}
+
+.nameInput {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  outline: none;
+  font-size: 14px;
+}
+
+.joinBtn {
+  background: #007acc;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.joinBtn:hover {
+  background: #005fa3;
+}

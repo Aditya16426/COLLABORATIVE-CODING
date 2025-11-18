@@ -66,6 +66,40 @@ html, body, #root {
 }
 .drawer:not(.open) { transform: translateX(-100%); }
 
+
+/* 🧮 Output panel (appears after clicking Run) */
+.outputPanel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: #1e1e1e;
+  border-top: 2px solid #333;
+  padding: 8px 16px;
+  overflow-y: auto;
+  z-index: 25;
+  color: #00ff88;
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+
+.outputHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.outputContent {
+  background: #000;
+  border-radius: 6px;
+  padding: 8px;
+  white-space: pre-wrap;
+  color: #00ff88;
+}
+
 .userList {
   list-style: none;
   padding: 0;
@@ -179,6 +213,11 @@ html, body, #root {
   margin-bottom: 16px;
 }
 
+
+.langSelect:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 .nameInput {
   width: 100%;
   padding: 10px;

@@ -97,6 +97,8 @@ const JUDGE0_API_KEY = ""; // leave empty (no key)
     });
 
     s.on("updateUsers", (users) => setUsers(users));
+    s.on("userCursorMoved", handleRemoteCursor);
+
     // 🔄 Listen for language changes from the owner
       s.on("languageChanged", ({ newLang }) => {
         setLanguage(newLang);
@@ -123,34 +125,50 @@ const JUDGE0_API_KEY = ""; // leave empty (no key)
   };
 
   // 🧩 Patch and cursor handling
-  const computePatch = (oldStr, newStr) => {
-    let start = 0;
-    const minLen = Math.min(oldStr.length, newStr.length);
-    while (start < minLen && oldStr[start] === newStr[start]) start++;
-    let endOld = oldStr.length - 1;
-    let endNew = newStr.length - 1;
-    while (endOld >= start && endNew >= start && oldStr[endOld] === newStr[endNew]) {
-      endOld--;
-      endNew--;
-    }
-    const removed = endOld >= start ? endOld - start + 1 : 0;
-    const inserted = endNew >= start ? newStr.slice(start, endNew + 1) : "";
-    return { start, removed, inserted };
+const computePatch = (oldText, newText) => {
+  if (oldText === newText) return null;
+
+  let start = 0;
+  while (
+    start < oldText.length &&
+    start < newText.length &&
+    oldText[start] === newText[start]
+  ) {
+    start++;
+  }
+
+  let oldEnd = oldText.length;
+  let newEnd = newText.length;
+
+  while (
+    oldEnd > start &&
+    newEnd > start &&
+    oldText[oldEnd - 1] === newText[newEnd - 1]
+  ) {
+    oldEnd--;
+    newEnd--;
+  }
+
+  return {
+    start,
+    removed: oldEnd - start,
+    inserted: newText.slice(start, newEnd)
   };
+};
+
 function detectInputNeed(code) {
   if (!code) return false;
   return /input\s*\(|scanf\s*\(|cin\s*>>|prompt\s*\(|new\s+Scanner|Scanner\s+/.test(code);
 }
 
   const applyRemotePatch = (patch) => {
-  if (!editorRef.current) return;
+  if (!patch || !editorRef.current) return;
 
   const model = editorRef.current.getModel();
   if (!model) return;
 
   const { start, removed, inserted } = patch;
 
-  // Calculate the correct positions for insertion and deletion
   const startPos = model.getPositionAt(start);
   const endPos = model.getPositionAt(start + removed);
 
@@ -165,14 +183,36 @@ function detectInputNeed(code) {
     forceMoveMarkers: true,
   };
 
-  // Apply patch safely without resetting full text
   isApplyingRemote.current = true;
-  editorRef.current.executeEdits("remote", [edit]);
-  prevValueRef.current = model.getValue();
+  model.pushEditOperations([], [edit], () => null);
   isApplyingRemote.current = false;
+
+  prevValueRef.current = model.getValue();
 };
 
 
+const _cursorLastSentRef = useRef(0);
+const _cursorThrottleMs = 80; // send at most ~12 times/sec
+
+const sendCursorPosition = () => {
+  const editor = editorRef.current;
+  if (!editor || !socket) return;
+
+  const pos = editor.getPosition();
+  if (!pos) return;
+
+  const now = Date.now();
+  if (now - _cursorLastSentRef.current < _cursorThrottleMs) return;
+  _cursorLastSentRef.current = now;
+
+  // emit logical caret position (line/column) — more reliable cross-clients
+  socket.emit("cursorMove", {
+    roomId,
+    cursorPos: { lineNumber: pos.lineNumber, column: pos.column },
+    username,
+    color: userColor,
+  });
+};
 
   const handleEditorChange = (newValue) => {
     if (isApplyingRemote.current || role === "viewer") return;
@@ -183,38 +223,70 @@ function detectInputNeed(code) {
     sendCursorPosition();
   };
 
-  const sendCursorPosition = () => {
-    if (!editorRef.current) return;
-    const pos = editorRef.current.getPosition();
-    const layout = editorRef.current.getScrolledVisiblePosition(pos);
-    if (!layout) return;
-    socket.emit("cursorMove", {
-      roomId,
-      cursorPos: { top: layout.top, left: layout.left },
-      username,
-      color: userColor,
-    });
-  };
+  
 
-  const handleRemoteCursor = ({ username, cursorPos, color, socketId }) => {
-    if (!cursorLayerRef.current) return;
-    if (!cursorTags.current[socketId]) {
-      const tag = document.createElement("div");
-      tag.className = "cursorTag";
-      tag.textContent = username;
-      tag.style.borderLeftColor = color;
-      tag.style.background = "rgba(0,0,0,0.85)";
-      cursorLayerRef.current.appendChild(tag);
-      cursorTags.current[socketId] = tag;
+const handleRemoteCursor = ({ username, cursorPos, color, socketId }) => {
+  const editor = editorRef.current;
+  const layer = cursorLayerRef.current;
+  if (!editor || !layer || !cursorPos || !socketId) return;
+
+  // ensure tag exists
+  if (!cursorTags.current[socketId]) {
+    const tag = document.createElement("div");
+    tag.className = "cursorTag";
+    tag.textContent = username || "";
+    tag.style.borderLeftColor = color || "#fff";
+    tag.style.background = "rgba(0,0,0,0.85)";
+    tag.style.position = "absolute";
+    tag.style.zIndex = 998;
+    tag.style.whiteSpace = "nowrap";
+    tag.style.pointerEvents = "none";
+    layer.appendChild(tag);
+    cursorTags.current[socketId] = tag;
+  }
+
+  const tag = cursorTags.current[socketId];
+
+  // Try monaco API to get visible pixel position for the logical position
+  let screenPos = null;
+  try {
+    // preferred: getScrolledVisiblePosition takes { lineNumber, column }
+    if (typeof editor.getScrolledVisiblePosition === "function") {
+      screenPos = editor.getScrolledVisiblePosition({
+        lineNumber: cursorPos.lineNumber,
+        column: cursorPos.column || 1,
+      });
     }
+  } catch (e) {
+    screenPos = null;
+  }
 
-    const tag = cursorTags.current[socketId];
-    tag.style.top = `${cursorPos.top}px`;
-    tag.style.left = `${cursorPos.left}px`;
-    tag.style.display = "block";
-    clearTimeout(tag._hideTimeout);
-    tag._hideTimeout = setTimeout(() => (tag.style.display = "none"), 2000);
-  };
+  // Fallback: compute top from line number and left ~ start of editor
+  if (!screenPos) {
+    try {
+      const topForLine = editor.getTopForLineNumber(cursorPos.lineNumber || 1);
+      // getScrollTop gives how much has been scrolled
+      const scrollTop = editor.getScrollTop ? editor.getScrollTop() : 0;
+      const editorLeft = 8; // small padding fallback
+      screenPos = { top: topForLine - scrollTop, left: editorLeft };
+    } catch (e) {
+      // Last fallback: place at top-left
+      screenPos = { top: 0, left: 0 };
+    }
+  }
+
+  // position the tag
+  tag.style.top = `${Math.max(0, screenPos.top)}px`;
+  tag.style.left = `${Math.max(0, screenPos.left)}px`;
+  tag.style.display = "block";
+
+  // reset/hide after 2s
+  clearTimeout(tag._hideTimeout);
+  tag._hideTimeout = setTimeout(() => {
+    // keep it hidden rather than removing so we can reuse DOM node
+    tag.style.display = "none";
+  }, 2000);
+};
 
   // ---------- Helpers for running code ----------
 

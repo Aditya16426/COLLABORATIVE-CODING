@@ -195,7 +195,9 @@ const axios = require("axios");
 const bodyParser = require("body-parser");
 
 app.use(bodyParser.json());
-
+app.get("/judge0/test", (req, res) => {
+  res.json({ status: "ok", message: "Judge0 backend working" });
+});
 app.options("/judge0", (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-RapidAPI-Key, X-RapidAPI-Host");

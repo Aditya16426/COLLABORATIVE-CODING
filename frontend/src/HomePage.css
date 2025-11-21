@@ -1,0 +1,155 @@
+/* Base background */
+.home-container {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(circle at top, #13162b, #000000);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Glassmorphism card */
+.home-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(18px);
+  text-align: center;
+  box-shadow: 0px 20px 60px rgba(0, 0, 0, 0.7);
+  animation: floatCard 3.8s ease-in-out infinite alternate;
+  z-index: 10;
+}
+
+/* Floating animation */
+@keyframes floatCard {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-12px); }
+}
+
+/* Title */
+.home-title {
+  font-size: 34px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 25px;
+  letter-spacing: 1px;
+  text-shadow: 0 0 15px rgba(0,255,255,0.4);
+}
+
+/* Input */
+.input-box {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  margin-bottom: 18px;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  transition: 0.3s;
+}
+
+.input-box::placeholder {
+  color: #dddddd;
+}
+
+.input-box:focus {
+  background: rgba(255,255,255,0.3);
+  box-shadow: 0 0 10px #6fc3ff;
+}
+
+/* Buttons */
+.btn-primary, .btn-secondary {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  transition: 0.25s ease;
+  transform-style: preserve-3d;
+}
+
+/* Blue gradient */
+.btn-primary {
+  background: linear-gradient(135deg, #2575fc, #6dd5fa);
+}
+
+.btn-primary:hover {
+  transform: scale(1.06) rotateX(6deg);
+  box-shadow: 0 0 20px rgba(0, 140, 255, 0.8);
+}
+
+/* Purple-pink gradient */
+.btn-secondary {
+  background: linear-gradient(135deg, #b91dff, #ff57c8);
+}
+
+.btn-secondary:hover {
+  transform: scale(1.06) rotateX(6deg);
+  box-shadow: 0 0 20px rgba(255, 0, 150, 0.8);
+}
+
+/* Animated glowing orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.4;
+  animation: moveOrb 10s infinite alternate ease-in-out;
+}
+
+.orb1 {
+  width: 280px;
+  height: 280px;
+  background: #5b14ff;
+  top: 10%;
+  left: 10%;
+}
+
+.orb2 {
+  width: 320px;
+  height: 320px;
+  background: #00eaff;
+  bottom: 15%;
+  right: 12%;
+}
+
+.orb3 {
+  width: 220px;
+  height: 220px;
+  background: #ff008c;
+  top: 60%;
+  left: 20%;
+  animation-duration: 12s;
+}
+
+@keyframes moveOrb {
+  0% { transform: translate(0,0); }
+  100% { transform: translate(40px, -40px); }
+}
+
+/* Floating particles background */
+.particles {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.25) 2px, transparent 2px);
+  background-size: 40px 40px;
+  opacity: 0.08;
+  animation: particlesFloat 15s linear infinite;
+}
+
+@keyframes particlesFloat {
+  from { background-position: 0 0; }
+  to   { background-position: 100px 100px; }
+}

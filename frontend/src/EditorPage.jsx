@@ -15,7 +15,7 @@ export default function EditorPage() {
   const [showNameModal, setShowNameModal] = useState(false);
   const [tempName, setTempName] = useState("");
 
-  const [language, setLanguage] = useState("javascript");
+ const [language, setLanguage] = useState("python");
 
 
   const editorRef = useRef(null);
@@ -64,6 +64,28 @@ const JUDGE0_API_KEY = ""; // leave empty (no key)
     setTempName(savedName);
     setShowNameModal(true);
   }, []);
+
+
+  // 🚫 CUSTOM REFRESH WARNING MESSAGE - Add this after existing useEffect
+useEffect(() => {
+  const handleBeforeUnload = (event) => {
+    // Your custom warning message
+    const message = "DO NOT REFRESH THE EDITOR PAGE! Your code will get merged and conflicted with other users.";
+    
+    // Set the custom message for the browser dialog
+    event.preventDefault();
+    event.returnValue = message;
+    return message;
+  };
+
+  // Add event listener
+  window.addEventListener('beforeunload', handleBeforeUnload);
+
+  // Cleanup
+  return () => {
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+  };
+}, []);
 
   // 🆕 Connect after name entered
   const handleJoinWithName = () => {
@@ -158,7 +180,7 @@ const computePatch = (oldText, newText) => {
 
 function detectInputNeed(code) {
   if (!code) return false;
-  return /input\s*\(|scanf\s*\(|cin\s*>>|prompt\s*\(|new\s+Scanner|Scanner\s+/.test(code);
+  return /input\s*\(|scanf\s*\(|cin\s*>>|new\s+Scanner|Scanner\s+/.test(code);
 }
 
   const applyRemotePatch = (patch) => {
@@ -349,31 +371,7 @@ async function loadPyodideIfNeeded() {
 
 
 // Run JavaScript directly in browser
-function runJavaScript(code) {
-  return new Promise((resolve) => {
-    const consoleBackup = { log: console.log, error: console.error };
-    let output = "";
-    console.log = (...args) => {
-      output += args.map(String).join(" ") + "\n";
-      consoleBackup.log(...args);
-    };
-    console.error = (...args) => {
-      output += args.map(String).join(" ") + "\n";
-      consoleBackup.error(...args);
-    };
-    try {
-      const result = new Function(code)();
-      if (result !== undefined) output += String(result) + "\n";
-      resolve(output);
-    } catch (e) {
-      output += e.toString() + "\n";
-      resolve(output);
-    } finally {
-      console.log = consoleBackup.log;
-      console.error = consoleBackup.error;
-    }
-  });
-}
+
 
 // Run Python with Pyodide
 // ✅ Run via Judge0 (for C / C++ / Java) — CORS-friendly version
@@ -436,7 +434,7 @@ function judge0LanguageId(lang) {
     cpp: 54,      // G++ C++
     java: 91,     // Java 17
     python: null, // local
-    javascript: null, // local
+   // local
   }[lang];
 }
 
@@ -668,7 +666,7 @@ await runFinal("");
             disabled={role !== "owner"}
             title={role !== "owner" ? "Only the owner can change the language" : ""}
           >
-            <option value="javascript">JavaScript</option>
+            {/* <option value="javascript">JavaScript</option> */}
             <option value="python">Python</option>
             <option value="cpp">C++</option>
             <option value="c">C</option>

@@ -1,5 +1,6 @@
 // src/HomePage.jsx
 import React, { useState } from "react";
+import "./HomePage.css";
 
 export default function HomePage() {
   const [roomId, setRoomId] = useState("");
@@ -19,28 +20,33 @@ export default function HomePage() {
   };
 
   return (
-    <div style={{ textAlign: "center", padding: "40px" }}>
-      <h2>Welcome to Collaborative Coding</h2>
-      <button
-        onClick={createRoom}
-        style={{ padding: "10px 20px", margin: "10px", cursor: "pointer" }}
-      >
-        Create Room
-      </button>
-      <br />
-      <input
-        type="text"
-        placeholder="Enter Room ID"
-        value={roomId}
-        onChange={(e) => setRoomId(e.target.value)}
-        style={{ padding: "8px", margin: "10px" }}
-      />
-      <button
-        onClick={joinRoom}
-        style={{ padding: "10px 20px", margin: "10px", cursor: "pointer" }}
-      >
-        Join Room
-      </button>
+    <div className="home-container">
+
+      {/* Animated floating shapes */}
+      <div className="orb orb1"></div>
+      <div className="orb orb2"></div>
+      <div className="orb orb3"></div>
+      <div className="particles"></div>
+
+      <div className="home-card">
+        <h2 className="home-title">Collaborative Coding</h2>
+
+        <button onClick={createRoom} className="btn-primary">
+          Create Room
+        </button>
+
+        <input
+          type="text"
+          placeholder="Enter Room ID"
+          value={roomId}
+          onChange={(e) => setRoomId(e.target.value)}
+          className="input-box"
+        />
+
+        <button onClick={joinRoom} className="btn-secondary">
+          Join Room
+        </button>
+      </div>
     </div>
   );
 }

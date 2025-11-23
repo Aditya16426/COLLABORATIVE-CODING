@@ -3,6 +3,9 @@ import { io } from "socket.io-client";
 import Editor from "@monaco-editor/react";
 import "./styles.css";
 
+
+
+
 export default function EditorPage() {
   const [socket, setSocket] = useState(null);
   const [role, setRole] = useState("viewer");
@@ -688,7 +691,7 @@ await runFinal("");
 
 
 
-        <span className="toolbarTitle">🧠 Collaborative Editor</span>
+        <span className="toolbarTitle">COLLABORATIVE EDITOR</span>
         <div className="toolbarActions">
           <button onClick={changeName} className="toolbarBtn">✏️ Change Name</button>
           <button onClick={copyRoomId} className="toolbarBtn">📋 Copy Room ID</button>

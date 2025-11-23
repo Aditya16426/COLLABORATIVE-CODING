@@ -1,243 +1,542 @@
+/* ============================
+   ULTRA-PREMIUM THEME (FULL)
+   - Keeps all sizing & layout intact.
+   - Adds glass, depth, animated ambient lighting, neon glows,
+     subtle particle field, micro-interactions, and accessibility improvements.
+   - Replace your existing theme file with this exact content.
+   ============================ */
+
+/* ---------- Root / Page ---------- */
 html, body, #root {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  font-family: Arial, sans-serif;
-  background-color: #1e1e1e;
-  color: white;
+  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  background: #08080a; /* fallback */
+  color: #e8f0ff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Subtle base vignette + cool-blue depth */
+  background-image:
+    radial-gradient(1200px 600px at 5% 5%, rgba(120, 60, 255, 0.08), transparent 12%),
+    radial-gradient(1000px 500px at 95% 95%, rgba(0, 200, 160, 0.06), transparent 12%),
+    linear-gradient(180deg, #06060a 0%, #030305 60%);
 }
 
+/* ---------- Main container (preserve size) ---------- */
 .mainContainer {
   width: 100vw;
   height: 100vh;
   position: relative;
+  isolation: isolate; /* keep effects local */
+  /* animated ambient background layers using pseudo-elements */
+}
+.mainContainer::before,
+.mainContainer::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: screen;
+  opacity: 0.6;
+  filter: blur(80px) saturate(120%);
+  transition: opacity 0.6s ease;
+}
+.mainContainer::before {
+  background: radial-gradient(closest-side, rgba(115, 68, 255, 0.20), transparent 30%);
+  transform: translate(-10%, -5%) scale(1);
+  animation: floatSlowA 14s ease-in-out infinite alternate;
+}
+.mainContainer::after {
+  background: radial-gradient(closest-side, rgba(0, 210, 160, 0.16), transparent 28%);
+  transform: translate(8%, 6%) scale(1);
+  animation: floatSlowB 17s ease-in-out infinite alternate-reverse;
+}
+@keyframes floatSlowA {
+  0% { transform: translate(-10%, -5%) scale(1); }
+  100% { transform: translate(-15%, 4%) scale(1.08); }
+}
+@keyframes floatSlowB {
+  0% { transform: translate(8%, 6%) scale(1); }
+  100% { transform: translate(12%, -4%) scale(1.06); }
 }
 
-/* 🧭 Top Toolbar */
+/* fine-grain animated particles (non-DOM) */
+.mainContainer .__particleField {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1px 1px at 8% 12%, rgba(255,255,255,0.06) 0, transparent 50%),
+    radial-gradient(1px 1px at 22% 42%, rgba(255,255,255,0.04) 0, transparent 50%),
+    radial-gradient(1px 1px at 60% 18%, rgba(255,255,255,0.03) 0, transparent 50%),
+    radial-gradient(1px 1px at 85% 72%, rgba(255,255,255,0.05) 0, transparent 50%);
+  background-size: 400px 400px;
+  animation: driftParticles 28s linear infinite;
+  opacity: 0.45;
+  filter: blur(0.6px);
+}
+@keyframes driftParticles {
+  from { background-position: 0 0, 0 0, 0 0, 0 0; }
+  to   { background-position: 800px 600px, -700px -400px, 600px -300px, -500px 700px; }
+}
+
+/* keep particle element optional — if not present, visual still good */
+
+/* ---------- Top Toolbar (keep height 50px) ---------- */
 .topToolbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 50px;
-  background: #202225;
-  border-bottom: 2px solid #333;
+  height: 50px; /* preserved */
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  z-index: 30; /* ABOVE drawer */
+  z-index: 30;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  backdrop-filter: blur(8px) saturate(120%);
+  background: linear-gradient(180deg, rgba(10,12,16,0.6) 0%, rgba(12,14,18,0.45) 60%);
+  box-shadow: 0 6px 22px rgba(3,4,8,0.7), inset 0 -1px 0 rgba(255,255,255,0.01);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  will-change: transform;
 }
 
+/* animated subtle sheen over toolbar */
+.topToolbar::after {
+  content: "";
+  position: absolute;
+  left: -40%;
+  top: -30%;
+  width: 120%;
+  height: 160%;
+  background: linear-gradient(120deg, rgba(255,255,255,0.02), rgba(255,255,255,0.06) 10%, rgba(255,255,255,0.0) 40%);
+  transform: translateX(0) rotate(6deg);
+  mix-blend-mode: screen;
+  filter: blur(12px);
+  opacity: 0.35;
+  animation: sheen 8s linear infinite;
+  pointer-events: none;
+}
+@keyframes sheen {
+  0% { transform: translateX(-60%) rotate(6deg); opacity: 0.18; }
+  50% { transform: translateX(20%) rotate(6deg); opacity: 0.5; }
+  100% { transform: translateX(140%) rotate(6deg); opacity: 0.18; }
+}
+
+/* toolbar title styling */
 .toolbarTitle {
-  font-weight: bold;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-size: 15px;
+  color: #eaffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 31; /* above sheen */
 }
 
+/* micro badge next to title */
+.toolbarTitle::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(180deg,#8b5cff,#4b91ff);
+  box-shadow: 0 0 10px rgba(120, 80, 255, 0.6);
+  display: inline-block;
+}
+
+/* ---------- toolbar buttons (preserve size) ---------- */
 .toolbarBtn {
-  background: #007acc;
+  background: linear-gradient(135deg,#2fa7ff,#00f0d3);
   border: none;
-  color: white;
-  padding: 6px 10px;
-  border-radius: 4px;
+  color: #021017;
+  padding: 6px 10px; /* preserved */
+  border-radius: 8px; /* slightly more rounded */
   margin-left: 8px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: transform 0.12s ease, box-shadow 0.18s ease;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  box-shadow: 0 6px 20px rgba(0,160,220,0.12), inset 0 -2px 8px rgba(0,0,0,0.18);
+  z-index: 32;
 }
-.toolbarBtn:hover { background: #005fa3; }
-.toolbarBtn.leave { background: #e81123; }
-.toolbarBtn.leave:hover { background: #c50f1f; }
+.toolbarBtn:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 14px 40px rgba(0,160,220,0.16), inset 0 -2px 10px rgba(0,0,0,0.2);
+}
+.toolbarBtn:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 20px rgba(0,160,220,0.10);
+}
+.toolbarBtn:focus {
+  outline: 3px solid rgba(40,160,255,0.16);
+  outline-offset: 2px;
+}
 
-/* 📋 Drawer */
+/* leave button variant (preserve visual but rounded) */
+.toolbarBtn.leave {
+  background: linear-gradient(135deg,#ff5a6e,#ff2a2a);
+  color: #fff;
+  box-shadow: 0 8px 26px rgba(255,64,90,0.12), inset 0 -2px 6px rgba(0,0,0,0.2);
+}
+.toolbarBtn.leave:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 44px rgba(255,64,90,0.22);
+}
+
+/* ---------- Drawer (keep width 280px, top 50px preserved) ---------- */
 .drawer {
   position: fixed;
-  top: 50px; /* below toolbar */
+  top: 50px; /* preserved */
   left: 0;
   bottom: 0;
-  width: 280px;
-  background: #252526;
+  width: 280px; /* preserved */
   padding: 16px;
   overflow-y: auto;
-  border-right: 2px solid #444;
   transform: translateX(0);
-  transition: transform 0.3s ease;
+  transition: transform 0.34s cubic-bezier(.2,.9,.3,1), box-shadow 0.34s ease;
   z-index: 20;
+  border-right: 1px solid rgba(255,255,255,0.028);
+  background: linear-gradient(180deg, rgba(30,30,36,0.86), rgba(20,20,24,0.78));
+  box-shadow: 8px 0 30px rgba(2,4,8,0.75);
+  backdrop-filter: blur(10px) saturate(120%);
+  border-top-right-radius: 12px;
 }
+
+/* subtle elevated header inside drawer */
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.drawerHeader .title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #e9f9ff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* when closed (preserve transform) */
 .drawer:not(.open) { transform: translateX(-100%); }
 
-
-/* 🧮 Output panel (appears after clicking Run) */
+/* ---------- Output Panel (keep height 200px) ---------- */
 .outputPanel {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 200px;
-  background: #1e1e1e;
-  border-top: 2px solid #333;
-  padding: 8px 16px;
-  overflow-y: auto;
+  height: 200px; /* preserved */
+  padding: 10px 16px;
   z-index: 25;
-  color: #00ff88;
-  font-family: monospace;
-  white-space: pre-wrap;
+  border-top: 1px solid rgba(255,255,255,0.032);
+  backdrop-filter: blur(8px);
+  background: linear-gradient(180deg, rgba(2,6,8,0.9), rgba(0,0,0,0.85));
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.7);
+  color: #bfffd9;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+  overflow-y: auto;
 }
 
+/* output header */
 .outputHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: bold;
-  margin-bottom: 6px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #97ffd7;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 10px rgba(0,255,160,0.08);
 }
 
+/* output content box */
 .outputContent {
-  background: #000;
-  border-radius: 6px;
-  padding: 8px;
+  background: linear-gradient(180deg, rgba(0,8,4,0.75), rgba(0,0,0,0.6));
+  border-radius: 8px;
+  padding: 10px;
   white-space: pre-wrap;
-  color: #00ff88;
+  color: #9ffcda;
+  box-shadow: inset 0 0 18px rgba(16,255,180,0.04), 0 6px 24px rgba(0,0,0,0.6);
+  border: 1px solid rgba(28,255,170,0.04);
+  font-size: 13px;
+  line-height: 1.45;
 }
 
+/* ---------- Users list items ---------- */
 .userList {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
-
 .userList li {
-  background: #333;
-  margin-bottom: 8px;
-  padding: 8px;
-  border-radius: 4px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.02);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6), inset 0 -1px 0 rgba(255,255,255,0.01);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.userList li .meta {
+  display:flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.userList li .name {
+  font-weight: 600;
+  color: #f2fbff;
+}
+.userList li .sub {
+  font-size: 12px;
+  color: #a8cbd8;
 }
 
+/* ---------- Owner buttons (preserve visual) ---------- */
 .ownerButtons {
   display: flex;
-  gap: 6px;
-  margin-top: 6px;
+  gap: 8px;
+  margin-top: 8px;
   flex-wrap: wrap;
 }
 
+/* action button */
 .actionBtn {
-  background: #007acc;
+  background: linear-gradient(135deg, #47b7ff, #00e6b0);
   border: none;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
+  color: #021017;
+  padding: 6px 10px; /* preserved-ish */
+  border-radius: 10px;
   font-size: 12px;
   cursor: pointer;
+  font-weight: 700;
+  box-shadow: 0 8px 28px rgba(0,162,210,0.10), inset 0 -2px 6px rgba(0,0,0,0.18);
+  transition: transform 0.12s ease, box-shadow 0.18s ease;
 }
-.kickBtn {
-  background: #e81123;
-  border: none;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  cursor: pointer;
+.actionBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(0,162,210,0.16);
 }
 
-/* ✏️ Editor container below toolbar */
+/* kick button */
+.kickBtn {
+  background: linear-gradient(135deg, #ff6b78, #ff2f3d);
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: 0 8px 28px rgba(255,64,90,0.12);
+  transition: transform 0.12s ease, box-shadow 0.18s ease;
+}
+.kickBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 44px rgba(255,64,90,0.2);
+}
+
+/* ---------- Editor container (preserve absolute offsets) ---------- */
 .editorContainer {
   position: absolute;
-  top: 50px;
+  top: 50px; /* preserved */
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 10;
+  overflow: hidden;
+  /* keep layout unchanged while enhancing visual depth */
+  background: transparent;
 }
 
-/* ✅ Toast */
+/* subtle animated grid glow overlay inside editor area */
+.editorContainer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(transparent 96%, rgba(255,255,255,0.01) 100%),
+    linear-gradient(90deg, transparent 96%, rgba(255,255,255,0.01) 100%);
+  background-size: 140px 140px, 140px 140px;
+  mix-blend-mode: overlay;
+  opacity: 0.06;
+  transform: translateZ(0);
+}
+
+/* ambient glow rim inside editor */
+.editorContainer::after {
+  content: "";
+  position: absolute;
+  inset: -6%;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(90,50,220,0.06), transparent 30%);
+  filter: blur(36px);
+  opacity: 0.9;
+  z-index: 2;
+}
+
+/* ---------- Toast (preserve position) ---------- */
 .toast {
   position: fixed;
   top: 60px;
   right: 20px;
-  background: #007acc;
-  color: white;
   padding: 10px 16px;
-  border-radius: 6px;
+  border-radius: 12px;
   z-index: 999;
-  animation: fadein 0.2s ease, fadeout 0.3s ease 1.7s;
+  animation: toastIn 0.22s cubic-bezier(.2,.9,.3,1), toastOut 0.28s ease 1.8s;
+  background: linear-gradient(135deg, rgba(20,130,255,0.95), rgba(0,240,190,0.95));
+  color: #021017;
+  font-weight: 700;
+  box-shadow: 0 12px 38px rgba(6,26,60,0.6), inset 0 -2px 10px rgba(0,0,0,0.2);
 }
-@keyframes fadein {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
-@keyframes fadeout {
-  from { opacity: 1; }
-  to { opacity: 0; }
+@keyframes toastOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-8px) scale(0.98); }
 }
 
-/* Cursor tag (collaboration labels) */
+/* ---------- Cursor tag (collaboration labels) ---------- */
 .cursorTag {
   position: absolute;
-  padding: 2px 6px;
-  border-radius: 6px;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.85);
+  padding: 4px 8px;
+  border-radius: 10px;
+  color: #ffffff;
+  background: linear-gradient(180deg, rgba(0,0,0,0.72), rgba(12,12,14,0.88));
   font-size: 12px;
-  border-left: 2px solid #fff;
+  border-left: 3px solid rgba(255,255,255,0.12);
   pointer-events: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 18px rgba(0,0,0,0.25);
+  transform-origin: left center;
+  z-index: 60;
 }
 .cursorTag.owner {
-  background: rgba(232, 17, 35, 0.85);
-  border-left-color: #e81123;
-}/* 🔹 Custom Name Popup */
+  background: linear-gradient(180deg, rgba(232,17,35,0.96), rgba(140,10,18,0.9));
+  border-left-color: #ffb7b9;
+  text-shadow: 0 0 10px rgba(0,0,0,0.35);
+}
+
+/* ---------- Name Modal (preserve width 320px) ---------- */
 .nameModalOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(2,4,8,0.78);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 999;
+  backdrop-filter: blur(6px) saturate(110%);
 }
-
 .nameModal {
-  background: #1e1e1e;
+  background: linear-gradient(180deg, #0e0f12, #16161a);
   padding: 24px 32px;
-  border-radius: 10px;
+  border-radius: 16px;
   text-align: center;
-  color: white;
-  width: 320px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  color: #e7f7ff;
+  width: 320px; /* preserved */
+  box-shadow: 0 28px 70px rgba(0,0,0,0.72), inset 0 1px 0 rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.028);
+  transform: translateY(0);
+  transition: transform 0.22s cubic-bezier(.2,.9,.3,1), opacity 0.18s ease;
 }
-
 .nameModal h2 {
-  margin-bottom: 10px;
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #f7fdff;
+  letter-spacing: 0.02em;
+  text-shadow: 0 4px 18px rgba(40,180,255,0.06);
 }
-
 .nameModal p {
-  font-size: 14px;
-  color: #ccc;
-  margin-bottom: 16px;
+  font-size: 13px;
+  color: #b9d7e6;
+  margin: 0 0 16px 0;
 }
 
-
-.langSelect:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+/* ---------- Inputs & Buttons inside modal (preserve sizes) ---------- */
 .nameInput {
   width: 100%;
   padding: 10px;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   margin-bottom: 16px;
   outline: none;
   font-size: 14px;
+  background: linear-gradient(180deg, #16161a, #0e0f12);
+  color: #e9fbff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02), 0 8px 24px rgba(2,6,12,0.65);
+  transition: box-shadow 0.18s ease, transform 0.12s ease;
+}
+.nameInput:focus {
+  box-shadow: 0 0 0 3px rgba(24,140,255,0.14), 0 12px 32px rgba(4,10,20,0.75);
+  transform: translateY(-1px);
 }
 
+/* join button (preserve look but ultra-premium) */
 .joinBtn {
-  background: #007acc;
-  color: white;
-  padding: 8px 16px;
+  background: linear-gradient(135deg, #38b6ff, #00f2c6);
+  color: #00171b;
+  padding: 8px 16px; /* preserved */
   border: none;
-  border-radius: 6px;
+  border-radius: 999px;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 800;
+  box-shadow: 0 14px 40px rgba(0,150,210,0.14), inset 0 -3px 8px rgba(0,0,0,0.18);
+  transition: transform 0.12s ease, box-shadow 0.18s ease;
+}
+.joinBtn:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 22px 54px rgba(0,150,210,0.22);
 }
 
-.joinBtn:hover {
-  background: #005fa3;
+/* ---------- Disabled / Focus states ---------- */
+.langSelect:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(10%);
+}
+
+/* ---------- Accessibility: subtle focus outlines for keyboard users ---------- */
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 3px solid rgba(32,150,255,0.16);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* ---------- Minor utility (keeps spacing) ---------- */
+.hidden {
+  display: none !important;
+}
+
+/* ---------- Performance hint: reduce motion for prefers-reduced-motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .mainContainer::before, .mainContainer::after,
+  .topToolbar::after, .mainContainer .__particleField,
+  .editorContainer::before, .editorContainer::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .toolbarBtn, .actionBtn, .kickBtn, .joinBtn {
+    transition: none !important;
+  }
 }

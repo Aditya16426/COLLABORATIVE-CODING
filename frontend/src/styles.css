@@ -1,9 +1,9 @@
 /* ============================
-   ULTRA-PREMIUM THEME (FULL)
-   - Keeps all sizing & layout intact.
-   - Adds glass, depth, animated ambient lighting, neon glows,
-     subtle particle field, micro-interactions, and accessibility improvements.
-   - Replace your existing theme file with this exact content.
+   CLEAN PREMIUM THEME
+   - Simplified and elegant design
+   - Clean glass morphism effects
+   - Subtle animations and interactions
+   - Professional color scheme
    ============================ */
 
 /* ---------- Root / Page ---------- */
@@ -13,212 +13,122 @@ html, body, #root {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
-  background: #08080a; /* fallback */
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  background: #0a0a0f;
   color: #e8f0ff;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Subtle base vignette + cool-blue depth */
-  background-image:
-    radial-gradient(1200px 600px at 5% 5%, rgba(120, 60, 255, 0.08), transparent 12%),
-    radial-gradient(1000px 500px at 95% 95%, rgba(0, 200, 160, 0.06), transparent 12%),
-    linear-gradient(180deg, #06060a 0%, #030305 60%);
+  background-image: 
+    radial-gradient(ellipse at 5% 5%, rgba(120, 60, 255, 0.08) 0%, transparent 20%),
+    radial-gradient(ellipse at 95% 95%, rgba(0, 200, 160, 0.06) 0%, transparent 20%),
+    linear-gradient(180deg, #0a0a0f 0%, #070710 100%);
 }
 
-/* ---------- Main container (preserve size) ---------- */
+/* ---------- Main Container ---------- */
 .mainContainer {
   width: 100vw;
   height: 100vh;
   position: relative;
-  isolation: isolate; /* keep effects local */
-  /* animated ambient background layers using pseudo-elements */
-}
-.mainContainer::before,
-.mainContainer::after {
-  content: "";
-  position: absolute;
-  inset: -20%;
-  pointer-events: none;
-  z-index: 0;
-  mix-blend-mode: screen;
-  opacity: 0.6;
-  filter: blur(80px) saturate(120%);
-  transition: opacity 0.6s ease;
-}
-.mainContainer::before {
-  background: radial-gradient(closest-side, rgba(115, 68, 255, 0.20), transparent 30%);
-  transform: translate(-10%, -5%) scale(1);
-  animation: floatSlowA 14s ease-in-out infinite alternate;
-}
-.mainContainer::after {
-  background: radial-gradient(closest-side, rgba(0, 210, 160, 0.16), transparent 28%);
-  transform: translate(8%, 6%) scale(1);
-  animation: floatSlowB 17s ease-in-out infinite alternate-reverse;
-}
-@keyframes floatSlowA {
-  0% { transform: translate(-10%, -5%) scale(1); }
-  100% { transform: translate(-15%, 4%) scale(1.08); }
-}
-@keyframes floatSlowB {
-  0% { transform: translate(8%, 6%) scale(1); }
-  100% { transform: translate(12%, -4%) scale(1.06); }
+  overflow: hidden;
 }
 
-/* fine-grain animated particles (non-DOM) */
-.mainContainer .__particleField {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background-image:
-    radial-gradient(1px 1px at 8% 12%, rgba(255,255,255,0.06) 0, transparent 50%),
-    radial-gradient(1px 1px at 22% 42%, rgba(255,255,255,0.04) 0, transparent 50%),
-    radial-gradient(1px 1px at 60% 18%, rgba(255,255,255,0.03) 0, transparent 50%),
-    radial-gradient(1px 1px at 85% 72%, rgba(255,255,255,0.05) 0, transparent 50%);
-  background-size: 400px 400px;
-  animation: driftParticles 28s linear infinite;
-  opacity: 0.45;
-  filter: blur(0.6px);
-}
-@keyframes driftParticles {
-  from { background-position: 0 0, 0 0, 0 0, 0 0; }
-  to   { background-position: 800px 600px, -700px -400px, 600px -300px, -500px 700px; }
-}
-
-/* keep particle element optional — if not present, visual still good */
-
-/* ---------- Top Toolbar (keep height 50px) ---------- */
+/* ---------- Top Toolbar ---------- */
 .topToolbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 50px; /* preserved */
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
-  z-index: 30;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-  backdrop-filter: blur(8px) saturate(120%);
-  background: linear-gradient(180deg, rgba(10,12,16,0.6) 0%, rgba(12,14,18,0.45) 60%);
-  box-shadow: 0 6px 22px rgba(3,4,8,0.7), inset 0 -1px 0 rgba(255,255,255,0.01);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-  will-change: transform;
+  padding: 0 20px;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(20px);
+  background: rgba(15, 16, 20, 0.85);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 
-/* animated subtle sheen over toolbar */
-.topToolbar::after {
-  content: "";
-  position: absolute;
-  left: -40%;
-  top: -30%;
-  width: 120%;
-  height: 160%;
-  background: linear-gradient(120deg, rgba(255,255,255,0.02), rgba(255,255,255,0.06) 10%, rgba(255,255,255,0.0) 40%);
-  transform: translateX(0) rotate(6deg);
-  mix-blend-mode: screen;
-  filter: blur(12px);
-  opacity: 0.35;
-  animation: sheen 8s linear infinite;
-  pointer-events: none;
-}
-@keyframes sheen {
-  0% { transform: translateX(-60%) rotate(6deg); opacity: 0.18; }
-  50% { transform: translateX(20%) rotate(6deg); opacity: 0.5; }
-  100% { transform: translateX(140%) rotate(6deg); opacity: 0.18; }
-}
-
-/* toolbar title styling */
 .toolbarTitle {
   font-weight: 600;
-  letter-spacing: 0.04em;
   font-size: 15px;
-  color: #eaffff;
-  display: inline-flex;
+  color: #ffffff;
+  display: flex;
   align-items: center;
   gap: 10px;
-  z-index: 31; /* above sheen */
 }
 
-/* micro badge next to title */
 .toolbarTitle::before {
   content: "";
   width: 8px;
   height: 8px;
-  border-radius: 999px;
-  background: linear-gradient(180deg,#8b5cff,#4b91ff);
-  box-shadow: 0 0 10px rgba(120, 80, 255, 0.6);
+  border-radius: 50%;
+  background: #00d4aa;
   display: inline-block;
 }
 
-/* ---------- toolbar buttons (preserve size) ---------- */
+/* ---------- Toolbar Buttons ---------- */
 .toolbarBtn {
-  background: linear-gradient(135deg,#2fa7ff,#00f0d3);
+  background: linear-gradient(135deg, #2fa7ff, #00e6b8);
   border: none;
   color: #021017;
-  padding: 6px 10px; /* preserved */
-  border-radius: 8px; /* slightly more rounded */
-  margin-left: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  margin-left: 10px;
   cursor: pointer;
-  transition: transform 0.12s ease, box-shadow 0.18s ease;
+  transition: all 0.2s ease;
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.01em;
-  box-shadow: 0 6px 20px rgba(0,160,220,0.12), inset 0 -2px 8px rgba(0,0,0,0.18);
-  z-index: 32;
-}
-.toolbarBtn:hover {
-  transform: translateY(-2px) scale(1.01);
-  box-shadow: 0 14px 40px rgba(0,160,220,0.16), inset 0 -2px 10px rgba(0,0,0,0.2);
-}
-.toolbarBtn:active {
-  transform: translateY(0);
-  box-shadow: 0 8px 20px rgba(0,160,220,0.10);
-}
-.toolbarBtn:focus {
-  outline: 3px solid rgba(40,160,255,0.16);
-  outline-offset: 2px;
+  box-shadow: 0 4px 15px rgba(0,160,220,0.2);
 }
 
-/* leave button variant (preserve visual but rounded) */
-.toolbarBtn.leave {
-  background: linear-gradient(135deg,#ff5a6e,#ff2a2a);
-  color: #fff;
-  box-shadow: 0 8px 26px rgba(255,64,90,0.12), inset 0 -2px 6px rgba(0,0,0,0.2);
+.toolbarBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,160,220,0.3);
 }
+
+.toolbarBtn.leave {
+  background: linear-gradient(135deg, #ff5a6e, #ff2a2a);
+  color: #fff;
+}
+
 .toolbarBtn.leave:hover {
   transform: translateY(-2px);
-  box-shadow: 0 18px 44px rgba(255,64,90,0.22);
+  box-shadow: 0 6px 20px rgba(255,64,90,0.3);
 }
 
-/* ---------- Drawer (keep width 280px, top 50px preserved) ---------- */
+/* ---------- Drawer ---------- */
 .drawer {
   position: fixed;
-  top: 50px; /* preserved */
+  top: 50px;
   left: 0;
   bottom: 0;
-  width: 280px; /* preserved */
-  padding: 16px;
+  width: 280px;
+  padding: 20px;
   overflow-y: auto;
   transform: translateX(0);
-  transition: transform 0.34s cubic-bezier(.2,.9,.3,1), box-shadow 0.34s ease;
-  z-index: 20;
-  border-right: 1px solid rgba(255,255,255,0.028);
-  background: linear-gradient(180deg, rgba(30,30,36,0.86), rgba(20,20,24,0.78));
-  box-shadow: 8px 0 30px rgba(2,4,8,0.75);
-  backdrop-filter: blur(10px) saturate(120%);
-  border-top-right-radius: 12px;
+  transition: transform 0.3s ease;
+  z-index: 900;
+  border-right: 1px solid rgba(255,255,255,0.05);
+  backdrop-filter: blur(20px);
+  background: rgba(25, 26, 30, 0.9);
+  box-shadow: 8px 0 30px rgba(0,0,0,0.4);
 }
 
-/* subtle elevated header inside drawer */
+.drawer:not(.open) {
+  transform: translateX(-100%);
+}
+
 .drawerHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
+
 .drawerHeader .title {
   font-size: 13px;
   font-weight: 700;
@@ -227,316 +137,290 @@ html, body, #root {
   letter-spacing: 0.08em;
 }
 
-/* when closed (preserve transform) */
-.drawer:not(.open) { transform: translateX(-100%); }
-
-/* ---------- Output Panel (keep height 200px) ---------- */
-.outputPanel {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 200px; /* preserved */
-  padding: 10px 16px;
-  z-index: 25;
-  border-top: 1px solid rgba(255,255,255,0.032);
-  backdrop-filter: blur(8px);
-  background: linear-gradient(180deg, rgba(2,6,8,0.9), rgba(0,0,0,0.85));
-  box-shadow: 0 -10px 30px rgba(0,0,0,0.7);
-  color: #bfffd9;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
-  overflow-y: auto;
-}
-
-/* output header */
-.outputHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: #97ffd7;
-  letter-spacing: 0.02em;
-  text-shadow: 0 0 10px rgba(0,255,160,0.08);
-}
-
-/* output content box */
-.outputContent {
-  background: linear-gradient(180deg, rgba(0,8,4,0.75), rgba(0,0,0,0.6));
-  border-radius: 8px;
-  padding: 10px;
-  white-space: pre-wrap;
-  color: #9ffcda;
-  box-shadow: inset 0 0 18px rgba(16,255,180,0.04), 0 6px 24px rgba(0,0,0,0.6);
-  border: 1px solid rgba(28,255,170,0.04);
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-/* ---------- Users list items ---------- */
+/* ---------- User List ---------- */
 .userList {
   list-style: none;
   padding: 0;
   margin: 0;
 }
+
 .userList li {
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+  background: rgba(255,255,255,0.05);
   margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.02);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.6), inset 0 -1px 0 rgba(255,255,255,0.01);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  transition: all 0.2s ease;
 }
+
+.userList li:hover {
+  background: rgba(255,255,255,0.08);
+  transform: translateY(-1px);
+}
+
 .userList li .meta {
-  display:flex;
+  display: flex;
   flex-direction: column;
   gap: 4px;
 }
+
 .userList li .name {
   font-weight: 600;
   color: #f2fbff;
+  font-size: 14px;
 }
+
 .userList li .sub {
   font-size: 12px;
   color: #a8cbd8;
 }
 
-/* ---------- Owner buttons (preserve visual) ---------- */
+/* ---------- Owner Buttons ---------- */
 .ownerButtons {
   display: flex;
   gap: 8px;
   margin-top: 8px;
-  flex-wrap: wrap;
 }
 
-/* action button */
 .actionBtn {
   background: linear-gradient(135deg, #47b7ff, #00e6b0);
   border: none;
   color: #021017;
-  padding: 6px 10px; /* preserved-ish */
-  border-radius: 10px;
+  padding: 6px 12px;
+  border-radius: 6px;
   font-size: 12px;
   cursor: pointer;
-  font-weight: 700;
-  box-shadow: 0 8px 28px rgba(0,162,210,0.10), inset 0 -2px 6px rgba(0,0,0,0.18);
-  transition: transform 0.12s ease, box-shadow 0.18s ease;
-}
-.actionBtn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 40px rgba(0,162,210,0.16);
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
-/* kick button */
+.actionBtn:hover {
+  transform: translateY(-2px);
+}
+
 .kickBtn {
   background: linear-gradient(135deg, #ff6b78, #ff2f3d);
   border: none;
   color: white;
-  padding: 6px 10px;
-  border-radius: 10px;
+  padding: 6px 12px;
+  border-radius: 6px;
   font-size: 12px;
   cursor: pointer;
-  font-weight: 700;
-  box-shadow: 0 8px 28px rgba(255,64,90,0.12);
-  transition: transform 0.12s ease, box-shadow 0.18s ease;
-}
-.kickBtn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 44px rgba(255,64,90,0.2);
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
-/* ---------- Editor container (preserve absolute offsets) ---------- */
+.kickBtn:hover {
+  transform: translateY(-2px);
+}
+
+/* ---------- Output Panel ---------- */
+.outputPanel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  padding: 16px 20px;
+  z-index: 800;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(20px);
+  background: rgba(10, 12, 15, 0.9);
+  color: #bfffd9;
+  font-family: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+  overflow-y: auto;
+}
+
+.outputHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #97ffd7;
+}
+
+.outputContent {
+  background: rgba(255,255,255,0.03);
+  border-radius: 8px;
+  padding: 16px;
+  white-space: pre-wrap;
+  color: #e8fff5;
+  border: 1px solid rgba(255,255,255,0.08);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ---------- Editor Container ---------- */
 .editorContainer {
   position: absolute;
-  top: 50px; /* preserved */
+  top: 50px;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 10;
   overflow: hidden;
-  /* keep layout unchanged while enhancing visual depth */
   background: transparent;
 }
 
-/* subtle animated grid glow overlay inside editor area */
-.editorContainer::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(transparent 96%, rgba(255,255,255,0.01) 100%),
-    linear-gradient(90deg, transparent 96%, rgba(255,255,255,0.01) 100%);
-  background-size: 140px 140px, 140px 140px;
-  mix-blend-mode: overlay;
-  opacity: 0.06;
-  transform: translateZ(0);
-}
-
-/* ambient glow rim inside editor */
-.editorContainer::after {
-  content: "";
-  position: absolute;
-  inset: -6%;
-  pointer-events: none;
-  background: radial-gradient(closest-side, rgba(90,50,220,0.06), transparent 30%);
-  filter: blur(36px);
-  opacity: 0.9;
-  z-index: 2;
-}
-
-/* ---------- Toast (preserve position) ---------- */
+/* ---------- Toast ---------- */
 .toast {
   position: fixed;
-  top: 60px;
+  top: 70px;
   right: 20px;
-  padding: 10px 16px;
-  border-radius: 12px;
-  z-index: 999;
-  animation: toastIn 0.22s cubic-bezier(.2,.9,.3,1), toastOut 0.28s ease 1.8s;
-  background: linear-gradient(135deg, rgba(20,130,255,0.95), rgba(0,240,190,0.95));
+  padding: 12px 18px;
+  border-radius: 8px;
+  z-index: 9999;
+  animation: toastIn 0.3s ease, toastOut 0.3s ease 2s;
+  background: linear-gradient(135deg, #2fa7ff, #00e6b8);
   color: #021017;
-  font-weight: 700;
-  box-shadow: 0 12px 38px rgba(6,26,60,0.6), inset 0 -2px 10px rgba(0,0,0,0.2);
+  font-weight: 600;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
 }
+
 @keyframes toastIn {
-  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
+
 @keyframes toastOut {
   from { opacity: 1; transform: translateY(0); }
-  to   { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to { opacity: 0; transform: translateY(-10px); }
 }
 
-/* ---------- Cursor tag (collaboration labels) ---------- */
+/* ---------- Cursor Tags ---------- */
 .cursorTag {
   position: absolute;
-  padding: 4px 8px;
-  border-radius: 10px;
+  padding: 6px 10px;
+  border-radius: 6px;
   color: #ffffff;
-  background: linear-gradient(180deg, rgba(0,0,0,0.72), rgba(12,12,14,0.88));
+  background: rgba(20, 22, 30, 0.95);
   font-size: 12px;
-  border-left: 3px solid rgba(255,255,255,0.12);
+  font-weight: 500;
   pointer-events: none;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 0 18px rgba(0,0,0,0.25);
-  transform-origin: left center;
-  z-index: 60;
-}
-.cursorTag.owner {
-  background: linear-gradient(180deg, rgba(232,17,35,0.96), rgba(140,10,18,0.9));
-  border-left-color: #ffb7b9;
-  text-shadow: 0 0 10px rgba(0,0,0,0.35);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  z-index: 600;
+  backdrop-filter: blur(10px);
 }
 
-/* ---------- Name Modal (preserve width 320px) ---------- */
+.cursorTag.owner {
+  background: rgba(232, 17, 35, 0.95);
+}
+
+/* ---------- Name Modal ---------- */
 .nameModalOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(2,4,8,0.78);
+  background: rgba(2, 4, 8, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
-  backdrop-filter: blur(6px) saturate(110%);
+  z-index: 9999;
+  backdrop-filter: blur(10px);
 }
+
 .nameModal {
-  background: linear-gradient(180deg, #0e0f12, #16161a);
-  padding: 24px 32px;
-  border-radius: 16px;
+  background: rgba(20, 22, 28, 0.95);
+  padding: 30px;
+  border-radius: 12px;
   text-align: center;
   color: #e7f7ff;
-  width: 320px; /* preserved */
-  box-shadow: 0 28px 70px rgba(0,0,0,0.72), inset 0 1px 0 rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.028);
-  transform: translateY(0);
-  transition: transform 0.22s cubic-bezier(.2,.9,.3,1), opacity 0.18s ease;
+  width: 320px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(20px);
 }
+
 .nameModal h2 {
   margin: 0 0 10px 0;
   font-size: 18px;
-  font-weight: 800;
+  font-weight: 700;
   color: #f7fdff;
-  letter-spacing: 0.02em;
-  text-shadow: 0 4px 18px rgba(40,180,255,0.06);
-}
-.nameModal p {
-  font-size: 13px;
-  color: #b9d7e6;
-  margin: 0 0 16px 0;
 }
 
-/* ---------- Inputs & Buttons inside modal (preserve sizes) ---------- */
+.nameModal p {
+  font-size: 14px;
+  color: #b9d7e6;
+  margin: 0 0 20px 0;
+}
+
+/* ---------- Inputs & Buttons ---------- */
 .nameInput {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border: none;
-  border-radius: 10px;
-  margin-bottom: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
   outline: none;
   font-size: 14px;
-  background: linear-gradient(180deg, #16161a, #0e0f12);
+  background: rgba(255,255,255,0.08);
   color: #e9fbff;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.02), 0 8px 24px rgba(2,6,12,0.65);
-  transition: box-shadow 0.18s ease, transform 0.12s ease;
-}
-.nameInput:focus {
-  box-shadow: 0 0 0 3px rgba(24,140,255,0.14), 0 12px 32px rgba(4,10,20,0.75);
-  transform: translateY(-1px);
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: all 0.2s ease;
 }
 
-/* join button (preserve look but ultra-premium) */
+.nameInput:focus {
+  border-color: #2fa7ff;
+  background: rgba(255,255,255,0.12);
+}
+
 .joinBtn {
   background: linear-gradient(135deg, #38b6ff, #00f2c6);
   color: #00171b;
-  padding: 8px 16px; /* preserved */
+  padding: 10px 24px;
   border: none;
-  border-radius: 999px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 800;
-  box-shadow: 0 14px 40px rgba(0,150,210,0.14), inset 0 -3px 8px rgba(0,0,0,0.18);
-  transition: transform 0.12s ease, box-shadow 0.18s ease;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
+
 .joinBtn:hover {
-  transform: translateY(-3px) scale(1.01);
-  box-shadow: 0 22px 54px rgba(0,150,210,0.22);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,150,210,0.3);
 }
 
-/* ---------- Disabled / Focus states ---------- */
-.langSelect:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  filter: grayscale(10%);
-}
-
-/* ---------- Accessibility: subtle focus outlines for keyboard users ---------- */
+/* ---------- Focus States ---------- */
 :focus {
   outline: none;
 }
+
 :focus-visible {
-  outline: 3px solid rgba(32,150,255,0.16);
+  outline: 2px solid #2fa7ff;
   outline-offset: 2px;
-  border-radius: 8px;
 }
 
-/* ---------- Minor utility (keeps spacing) ---------- */
+/* ---------- Utility Classes ---------- */
 .hidden {
   display: none !important;
 }
 
-/* ---------- Performance hint: reduce motion for prefers-reduced-motion ---------- */
+/* ---------- Scrollbars ---------- */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+/* ---------- Reduced Motion ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .mainContainer::before, .mainContainer::after,
-  .topToolbar::after, .mainContainer .__particleField,
-  .editorContainer::before, .editorContainer::after {
+  * {
     animation: none !important;
-    transition: none !important;
-  }
-  .toolbarBtn, .actionBtn, .kickBtn, .joinBtn {
     transition: none !important;
   }
 }

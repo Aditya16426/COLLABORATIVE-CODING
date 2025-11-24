@@ -1,6 +1,6 @@
 // src/HomePage.jsx
 import React, { useState } from "react";
-import "./HomePage.css";
+import "./Homepage.css";
 
 export default function HomePage() {
   const [roomId, setRoomId] = useState("");
@@ -29,7 +29,8 @@ export default function HomePage() {
       <div className="particles"></div>
 
       <div className="home-card">
-        <h2 className="home-title">Collaborative Coding</h2>
+        <h2 className="home-title">Fusion Flow </h2>
+        <h3>From solo debugging and Squad Coding </h3>
 
         <button onClick={createRoom} className="btn-primary">
           Create Room
@@ -47,6 +48,17 @@ export default function HomePage() {
           Join Room
         </button>
       </div>
+      &nbsp; 
+      <div className="steps-container">
+  <h2>How It Works</h2>
+
+  <p>1. Create a room and instantly receive a unique room ID.</p>
+  <p>2. Share that room ID with your friends.</p>
+  <p>3. Everyone enters the same room ID and edits code in real-time.</p>
+  <p>4. No refresh required. All changes sync instantly.</p>
+</div>
     </div>
+
+    
   );
 }
